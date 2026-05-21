@@ -1,7 +1,14 @@
+using CineCritique.Data;
+using Microsoft.EntityFrameworkCore;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+
+//Incluir DbContext
+builder.Services.AddDbContext<MovieDbContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("")));
 
 var app = builder.Build();
 
