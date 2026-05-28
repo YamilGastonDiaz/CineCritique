@@ -1,0 +1,67 @@
+﻿@model LoginViewModel
+
+@{
+}
+
+<div class="container-fluid flex-grow-1 d-flex align-items-center justify-content-center py-5 position-relative">
+    <div class="row justify-content-center w-100 mx-0">
+        <div class="col-12 mb-4" style="max-width: 480px;">
+            <!-- Logo Area -->
+            <div class="text-center mb-5">
+                <h1 class="logo-text">TOON REVIEWS</h1>
+                <div class="bg-dark mx-auto rounded-pill" style="height: 4px; width: 6rem;"></div>
+            </div>
+            <!-- Login Card -->
+            <div class="rubber-hose-card">
+                <div class="text-center mb-4">
+                    <div class="avatar-circle mx-auto">
+                        <span class="material-symbols-outlined fs-1" style="font-variation-settings: 'FILL';">account_circle</span>
+                    </div>
+                    <h2 class="fw-bold mb-1">Log in</h2>
+                </div>
+                <form method="post">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>                    
+                    <!-- Email -->
+                    <div class="mb-4">
+                        <label asp-for="Email" class="control-label">
+                            <span class="material-symbols-outlined text-danger">mail</span>
+                            Mail
+                        </label>
+                        <input asp-for="Email" class="form-control" placeholder="name@example.com" />
+                        <span asp-validation-for="Email" class="text-danger"></span>
+                    </div>
+                    <!-- Password -->
+                    <div class="mb-4">
+                        <label asp-for="Clave" class="control-label">
+                            <span class="material-symbols-outlined text-danger">password</span>
+                            Password
+                        </label>
+                        <input asp-for="Clave" class="form-control" placeholder="password" />
+                        <span asp-validation-for="Clave" class="text-danger"></span>
+                    </div>
+                    <div class="checkbox mb-4">
+                        <label asp-for="Recordarme" class="form-label">
+                            <input class="form-check-input" asp-for="Recordarme" />
+                            @Html.DisplayNameFor(m => m.Recordarme)
+                        </label>
+                    </div>
+                    <div>
+                        <!-- Submit Button -->
+                        <button class="submit-btn ink-stroke rubber-hose-shadow" type="submit">
+                            LOG IN
+                        </button>
+                    </div>
+                </form>
+                <!-- Signup Link -->
+                <div class="mt-5 pt-4 border-top border-dark border-opacity-10 text-center">
+                    <p class="mb-0 text-muted">
+                        You have an account?
+                        <a asp-action="Registro" class="text-secondary fw-bold text-decoration-underline ms-1" style="text-underline-offset: 4px; text-decoration-thickness: 2px;">
+                            REGISTER
+                        </a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

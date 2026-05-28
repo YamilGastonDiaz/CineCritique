@@ -1,0 +1,52 @@
+﻿@model CineCritique.Models.Genero
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<div class="row g-5 mb-5">
+    <h1 class="display-title">
+        Genero Editar
+    </h1>
+    <hr />
+    <!-- Form -->
+    <div class="col-lg-8">
+        <form asp-action="Edit" class="form-container ink-stroke rubber-hose-shadow-lg">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Id" />
+            <div class="badge-config ink-stroke rubber-hose-shadow mb-4">
+                Configuration
+            </div>
+            <p class="lead text-muted mb-5">
+                Modifica tu genero.
+            </p>
+            <div class="row g-4">
+                <!-- Genero Name -->
+                <div class="col-12">
+                    <label asp-for="Descripcion" class="control-label">
+                        <span class="material-symbols-outlined text-danger">edit_note</span>
+                        Genero Name
+                    </label>
+                    <input asp-for="Descripcion" class="form-control" placeholder="e.g. Terror" />
+                    <span asp-validation-for="Descripcion" class="text-danger"></span>
+                </div>
+                <!-- Submit -->
+                <div class="col-12 mt-5">
+                    <button class="submit-btn ink-stroke rubber-hose-shadow" type="submit" value="Save">
+                        EDIT GENERE
+                        <span class="material-symbols-outlined fs-2">auto_fix_high</span>
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="col-4 m-4">
+        <a asp-action="Index" class="btn btn-light ink-stroke btn-toon rubber-hose-shadow px-4 py-2">Back to List</a>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

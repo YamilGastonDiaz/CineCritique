@@ -1,0 +1,87 @@
+﻿@model MiPerfilViewModel
+
+@{
+}
+
+<div class="container-fluid flex-grow-1 d-flex align-items-center justify-content-center py-5 position-relative">
+    <div class="row justify-content-center w-100 mx-0">
+        <div class="col-12 mb-4" style="max-width: 480px;">
+            <!-- Logo Area -->
+            <div class="text-center mb-5">
+                <h1 class="logo-text">TOON REVIEWS</h1>
+                <div class="bg-dark mx-auto rounded-pill" style="height: 4px; width: 6rem;"></div>
+            </div>
+            <!-- Login Card -->
+            <div class="rubber-hose-card">
+                <form method="post" enctype="multipart/form-data">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <div class="text-center mb-4">
+                        <div class="profile-img-container mb-3">
+                            <img alt="Foto de perfil" id="profileImage" class="profile-img" src="@Model.ImagenUrlPerfil" />
+
+                            <button type="button" class="edit-btn" onclick="document.getElementById('ImagenPerfil').click()">
+                                <span class="material-symbols-outlined" style="font-size: 16px;">edit</span>
+                            </button>
+
+                            <input type="file" asp-for="ImagenPerfil" accept="image/png,image/jpeg,image/webp" class="form-control" onchange="previewImage(this)" />
+                        </div>
+                        <h2 class="fw-bold mb-1">Mi Perfil</h2>
+                    </div>
+
+                    <!-- Name -->
+                    <div class="mb-4">
+                        <label asp-for="Nombre" class="control-label">
+                            <span class="material-symbols-outlined text-danger">edit_note</span>
+                            Name
+                        </label>
+                        <input asp-for="Nombre" class="form-control" placeholder="e.g. Jaimito" />
+                        <span asp-validation-for="Nombre" class="text-danger"></span>
+                    </div>
+                    <!-- Lastname -->
+                    <div class="mb-4">
+                        <label asp-for="Apellido" class="control-label">
+                            <span class="material-symbols-outlined text-danger">edit_note</span>
+                            Lastname
+                        </label>
+                        <input asp-for="Apellido" class="form-control" placeholder="e.g. Diaz" />
+                        <span asp-validation-for="Apellido" class="text-danger"></span>
+                    </div>
+                    <!-- Email -->
+                    <div class="mb-4">
+                        <label asp-for="Email" class="control-label">
+                            <span class="material-symbols-outlined text-danger">mail</span>
+                            Mail
+                        </label>
+                        <input asp-for="Email" disabled class="form-control" placeholder="name@example.com" />
+                        <span asp-validation-for="Email" class="text-danger"></span>
+                    </div>
+                    <div>
+                        <!-- Submit Button -->
+                        <button class="submit-btn ink-stroke rubber-hose-shadow" type="submit">
+                            EDIT
+                        </button>
+                    </div>
+                </form>
+            </div>
+            @if (ViewBag.Mensaje != null)
+            {
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    <strong>@ViewBag.Mensaje</strong>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<script>
+    function previewImage(input) {
+        if (input.files && input.files[0]) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                document.getElementById('profileImage').src = e.target.result;
+            };
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+</script>

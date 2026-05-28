@@ -1,0 +1,110 @@
+﻿@model Pelicula
+
+@{
+    ViewData["Title"] = "Detalle de Pelicula";
+    int horas = Model.MinutosDuracion / 60;
+    int minutos = Model.MinutosDuracion % 60;
+}
+
+<div class="col-lg-12">
+    <div class="mb-3">
+        <span class="badge bg-secondary-inkwell text-black px-3 py-2 border border-dark border-2" style="box-shadow: 4px 4px 0px 0px #000; border-radius: 0;">DETAILS</span>
+    </div>
+    <h1 class="display-1 fw-bold text-uppercase fst-italic tracking-tighter mb-4" style="line-height: 0.9;">@Model.Titulo</h1>
+</div>
+<div class="mt-4 border-bottom border-dark border-4" style="box-shadow: 2px 2px 0 0 #000;"></div>
+<!-- Content Grid -->
+<div class="container my-5 py-5">
+    <div class="row g-5">
+        <!-- Sidebar -->
+        <aside class="col-lg-4 order-lg-1">
+            <div class="bg-white inkwell-border-heavy inner-frame mb-5">
+                <img alt="@Model.Titulo" class="img-fluid grayscale w-100" src="@Model.PosterUrlPortada" />
+            </div>
+            <div class="p-4 bg-cream inkwell-border">
+                <h5 class="fw-bold text-uppercase fst-italic border-bottom border-dark pb-2 mb-3">TECHNICAL REEL</h5>
+                <div class="mb-2 d-flex justify-content-between align-items-center">
+                    <span class="text-uppercase small fw-bold opacity-75">Duration</span>
+                    <span class="fw-medium">@horas h @minutos m</span>
+                </div>
+                <div class="mb-2 d-flex justify-content-between align-items-center">
+                    <span class="text-uppercase small fw-bold opacity-75">Release</span>
+                    <span class="fw-medium">@Model.FechaLanzamiento.Year</span>
+                </div>
+                <div class="mb-2 d-flex justify-content-between align-items-center">
+                    <span class="text-uppercase small fw-bold opacity-75">Genre</span>
+                    <span class="fw-medium">@Model.Genero.Descripcion</span>
+                </div>
+                <div class="d-flex justify-content-between align-items-center">
+                    <span class="text-uppercase small fw-bold opacity-75">Platform</span>
+                    <div class="d-flex align-items-center gap-1">
+                        <span class="material-symbols-outlined text-danger">tv</span>
+                        <span class="fw-medium">@Model.Plataforma.Nombre</span>
+                    </div>
+                </div>
+            </div>
+        </aside>
+        <!-- Main Content -->
+        <div class="col-lg-8 order-lg-2">
+            <!-- Synopsis -->
+            <div class="mb-5">
+                <div class="d-flex align-items-center gap-3 mb-4">
+                    <h2 class="text-uppercase fw-bold fst-italic m-0 h1">The Synopsis</h2>
+                    <div class="flex-grow-1 border-top border-dark border-3"></div>
+                </div>
+                <p class="fs-4 fst-italic" style="line-height: 1.6;">
+                    <span class="material-symbols-outlined text-black" style="font-variation-settings: 'FILL';">star</span>
+                </p>
+                <p class="fs-4" style="line-height: 1.6;">
+                    @Model.Sinopsis
+                </p>
+            </div>
+            <!-- Review Section -->
+            <div class="p-5 inkwell-border-heavy position-relative overflow-hidden mb-5" style="background-color: #f5f3f3;">
+                <h2 class="text-uppercase fw-bold fst-italic mb-4 position-relative z-1">Leave Your Mark</h2>
+                <form class="position-relative z-1">
+                    <div class="row g-3 mb-4">
+                        <div class="col-md-6">
+                            <label class="small fw-bold text-uppercase mb-2 d-block">Your Handle</label>
+                            <input class="form-control form-control-inkwell" placeholder="e.g. Inky_Joe" type="text" />
+                        </div>
+                        <div class="col-md-6">
+                            <label class="small fw-bold text-uppercase mb-2 d-block">Rating (1-5)</label>
+                            <div class="d-flex gap-1" id="starRating">
+                                <span class="material-symbols-outlined text-danger cursor-pointer">star</span>
+                                <span class="material-symbols-outlined text-danger cursor-pointer">star</span>
+                                <span class="material-symbols-outlined text-danger cursor-pointer">star</span>
+                                <span class="material-symbols-outlined text-danger cursor-pointer">star</span>
+                                <span class="material-symbols-outlined text-dark cursor-pointer">star</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mb-4">
+                        <label class="small fw-bold text-uppercase mb-2 d-block">Review</label>
+                        <textarea class="form-control form-control-inkwell" placeholder="Spill your ink here..." rows="4"></textarea>
+                    </div>
+                    <button class="submit-btn ink-stroke rubber-hose-shadow btn-lg px-5" type="submit">SUBMIT REVIEW</button>
+                </form>
+            </div>
+            <!-- Recent Reviews -->
+            <div>
+                <h5 class="fw-bold fst-italic mb-4 d-flex align-items-center gap-2">
+                    <span class="material-symbols-outlined">forum</span> RECENT TELEGRAMS
+                </h5>
+                <div class="p-4 bg-white inkwell-border d-flex gap-4">
+                    <div class="rounded-circle border border-dark border-2 d-flex align-items-center justify-content-center bg-cream flex-shrink-0" style="width: 60px; height: 60px;">
+                        <span class="material-symbols-outlined fs-2">person_play</span>
+                    </div>
+                    <div>
+                        <div class="d-flex justify-content-between mb-2">
+                            <h6 class="fw-bold mb-0">RubberHose_Fan</h6>
+                            <span class="small fst-italic opacity-50">Oct 12, 1932</span>
+                        </div>
+                        <p class="mb-0">An absolute masterpiece of the medium. The way the shadows move is unlike anything I've seen in the talkies so far!</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

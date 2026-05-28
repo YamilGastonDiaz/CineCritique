@@ -1,21 +1,96 @@
-using System.Diagnostics;
+using CineCritique.Data;
 using CineCritique.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using System.Diagnostics;
 
 namespace CineCritique.Controllers
 {
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
+        private readonly MovieDbContext _context;
+        private const int PageSize = 6;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ILogger<HomeController> logger, MovieDbContext context)
         {
             _logger = logger;
+            _context = context;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index(int pagina = 1, string txtBusqueda = "", int generoId = 0, int plataformaId = 0)
         {
-            return View();
+            if (pagina < 1)
+            {
+                pagina = 1;
+            }
+
+            var consulta = _context.Peliculas.AsQueryable();
+
+            if (!string.IsNullOrEmpty(txtBusqueda))
+            {
+                consulta = consulta.Where(p => p.Titulo.Contains(txtBusqueda));
+            }
+
+            if (generoId > 0)
+            {
+                consulta = consulta.Where(p => p.GeneroId == generoId);
+            }
+
+            if (plataformaId > 0)
+            {
+                consulta = consulta.Where(p => p.PlataformaId == plataformaId);
+            }
+
+            var totalPeliculas = await consulta.CountAsync();
+            var totalPaginas = (int)Math.Ceiling(totalPeliculas / (double)PageSize);
+
+            if (pagina > totalPaginas && totalPaginas > 0)
+            {
+                pagina = totalPaginas;
+            }
+
+            var peliculas = await consulta
+                .Skip((pagina - 1) * PageSize)
+                .Take(PageSize)
+                .ToListAsync();
+
+            ViewBag.PaginaActual = pagina;
+            ViewBag.TotalPaginas = totalPaginas;
+            ViewBag.TotalPeliculas = totalPeliculas;
+            ViewBag.TxtBusqueda = txtBusqueda;
+
+            var generos = await _context.Generos.OrderBy(g => g.Descripcion).ToListAsync();
+            generos.Insert(0, new Genero { Id = 0, Descripcion = "Género" });
+            ViewBag.GeneroId = new SelectList(
+                generos,
+                "Id",
+                "Descripcion",
+                generoId
+            );
+
+            var plataforma = await _context.Plataformas.OrderBy(g => g.Nombre).ToListAsync();
+            plataforma.Insert(0, new Plataforma { Id = 0, Nombre = "Plataforma" });
+            ViewBag.PlataformaId = new SelectList(
+                plataforma,
+                "Id",
+                "Nombre",
+                plataformaId
+            );
+
+            return View(peliculas);
+        }
+
+        public async Task<IActionResult> Details(int id)
+        {
+            var pelicula = await _context.Peliculas
+                .Include(p => p.Genero)
+                .Include(p => p.Plataforma)
+                .FirstOrDefaultAsync(p => p.Id == id);
+
+            return View(pelicula);
         }
 
         public IActionResult Privacy()

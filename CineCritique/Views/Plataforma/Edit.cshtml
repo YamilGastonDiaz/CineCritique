@@ -1,0 +1,70 @@
+﻿@model CineCritique.Models.Plataforma
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<div class="row g-5 mb-5">
+    <h1 class="display-title">
+        Plataforma Editar
+    </h1>
+    <hr />
+    <!-- Form -->
+    <div class="col-lg-8">
+        <form asp-action="Edit" class="form-container ink-stroke rubber-hose-shadow-lg">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Id" />
+            <div class="badge-config ink-stroke rubber-hose-shadow mb-4">
+                Configuration
+            </div>
+            <p class="lead text-muted mb-5">
+                Modifica tu plataforma.
+            </p>
+            <div class="row g-4">
+                <!-- Platform Name -->
+                <div class="col-12">
+                    <label asp-for="Nombre" class="control-label">
+                        <span class="material-symbols-outlined text-danger">edit_note</span>
+                        Plataforma Name
+                    </label>
+                    <input asp-for="Nombre" class="form-control" placeholder="e.g. Netflix" />
+                    <span asp-validation-for="Nombre" class="text-danger"></span>
+                </div>
+                <!-- URL -->
+                <div class="col-md-6">
+                    <label asp-for="Url" class="control-label">
+                        <span class="material-symbols-outlined text-danger">link</span>
+                        Studio URL
+                    </label>
+                    <input asp-for="Url" class="form-control" placeholder="https://..." />
+                    <span asp-validation-for="Url" class="text-danger"></span>
+                </div>
+                <!-- Logo URL -->
+                <div class="col-md-6">
+                    <label asp-for="LogoUrl" class="control-label">
+                        <span class="material-symbols-outlined text-danger">image</span>
+                        Logo URL
+                    </label>
+                    <input asp-for="LogoUrl" class="form-control" placeholder="https://..." />
+                    <span asp-validation-for="LogoUrl" class="text-danger"></span>
+                </div>
+                <!-- Submit -->
+                <div class="col-12 mt-5">
+                    <button class="submit-btn ink-stroke rubber-hose-shadow" type="submit" value="Save">
+                        EDIT PLATFORM
+                        <span class="material-symbols-outlined fs-2">rocket_launch</span>
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class ="col-4 m-4">
+        <a asp-action="Index" class="btn btn-light ink-stroke btn-toon rubber-hose-shadow px-4 py-2">Back to List</a>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
