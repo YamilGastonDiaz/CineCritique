@@ -1,0 +1,52 @@
+﻿@model ReviewCreateViewModel
+
+@{
+}
+
+<!-- Modal -->
+<div class="modal fade" id="createReviewModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="createReviewModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form class="position-relative z-1" asp-controller="Review" asp-action="Create" method="post">
+                <input type="hidden" asp-for="PeliculaId" />
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="createReviewModalLabel">Crear Reseña ~ @Model.PeliculaTitulo</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="p-5 inkwell-border-heavy position-relative overflow-hidden mb-5" style="background-color: #f5f3f3;">
+                        <div class="row g-3 mb-4">
+                            <div class="col-md-6">
+                                <label class="small fw-bold text-uppercase mb-2 d-block">Rating (1-5)</label>
+                                <div class="d-flex gap-1 rating-stars">
+                                    <input type="radio" asp-for="Rating" value="5" id="star5" />
+                                    <label for="star5" class="star">★</label>
+                                    <input type="radio" asp-for="Rating" value="4" id="star4" />
+                                    <label for="star4" class="star">★</label>
+                                    <input type="radio" asp-for="Rating" value="3" id="star3" />
+                                    <label for="star3" class="star">★</label>
+                                    <input type="radio" asp-for="Rating" value="2" id="star2" />
+                                    <label for="star2" class="star">★</label>
+                                    <input type="radio" asp-for="Rating" value="1" id="star1" />
+                                    <label for="star1" class="star">★</label>
+                                </div>
+                                <span asp-validation-for="Rating" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="mb-4">
+                            <label asp-for="Comentario" class="small fw-bold text-uppercase mb-2 d-block">Review</label>
+                            <textarea asp-for="Comentario" class="form-control form-control-inkwell" placeholder="Spill your ink here..." rows="4"></textarea>
+                            <span asp-validation-for="Comentario" class="text-danger"></span>
+                        </div>
+
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-dark">Guardar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

@@ -11,12 +11,15 @@ namespace CineCritique.Controllers
         private readonly UserManager<Usuario> _userManager;
         private readonly SignInManager<Usuario> _signInManager;
         private readonly ImagenStorage _imagenStorage;
+        private readonly IEmailService _emailService;
 
-        public UsuarioController(UserManager<Usuario> userManager, SignInManager<Usuario> signInManager, ImagenStorage imagenStorage)
+        public UsuarioController(UserManager<Usuario> userManager,
+            SignInManager<Usuario> signInManager, ImagenStorage imagenStorage, IEmailService emailService)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _imagenStorage = imagenStorage;
+            _emailService = emailService;
         }
 
         public IActionResult Login()
@@ -71,6 +74,7 @@ namespace CineCritique.Controllers
                 if (resultado.Succeeded)
                 {
                     await _signInManager.SignInAsync(newUsuario, isPersistent: false);
+                    await _emailService.SendAsync(newUsuario.Email, "Bienvenido a Cine Critique", "<h1>Gracias por registrarte en Cine Critique</h1><p>Esperamos que disfrutes la plataforma</p>");
                     return RedirectToAction("Index", "Home");
                 }
                 else

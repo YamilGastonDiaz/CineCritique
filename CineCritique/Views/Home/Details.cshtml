@@ -1,4 +1,7 @@
-﻿@model Pelicula
+﻿﻿@using Microsoft.AspNetCore.Identity
+@inject SignInManager<Usuario> SignInManager
+@inject UserManager<Usuario> UserManager
+@model Pelicula
 
 @{
     ViewData["Title"] = "Detalle de Pelicula";
@@ -60,51 +63,147 @@
                 </p>
             </div>
             <!-- Review Section -->
-            <div class="p-5 inkwell-border-heavy position-relative overflow-hidden mb-5" style="background-color: #f5f3f3;">
-                <h2 class="text-uppercase fw-bold fst-italic mb-4 position-relative z-1">Leave Your Mark</h2>
-                <form class="position-relative z-1">
-                    <div class="row g-3 mb-4">
-                        <div class="col-md-6">
-                            <label class="small fw-bold text-uppercase mb-2 d-block">Your Handle</label>
-                            <input class="form-control form-control-inkwell" placeholder="e.g. Inky_Joe" type="text" />
-                        </div>
-                        <div class="col-md-6">
-                            <label class="small fw-bold text-uppercase mb-2 d-block">Rating (1-5)</label>
-                            <div class="d-flex gap-1" id="starRating">
-                                <span class="material-symbols-outlined text-danger cursor-pointer">star</span>
-                                <span class="material-symbols-outlined text-danger cursor-pointer">star</span>
-                                <span class="material-symbols-outlined text-danger cursor-pointer">star</span>
-                                <span class="material-symbols-outlined text-danger cursor-pointer">star</span>
-                                <span class="material-symbols-outlined text-dark cursor-pointer">star</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="mb-4">
-                        <label class="small fw-bold text-uppercase mb-2 d-block">Review</label>
-                        <textarea class="form-control form-control-inkwell" placeholder="Spill your ink here..." rows="4"></textarea>
-                    </div>
-                    <button class="submit-btn ink-stroke rubber-hose-shadow btn-lg px-5" type="submit">SUBMIT REVIEW</button>
-                </form>
+            <div class="d-flex flex-column flex-sm-row gap-3 mb-4 w-100">
+                <button @(ViewBag.UserReview ? "disabled" : "") class="btn btn-vintage flex-fill" data-bs-toggle="modal" data-bs-target="#createReviewModal">
+                    CREATE REVIEW
+                    <span class="material-symbols-outlined fs-6 align-middle ms-1">arrow_forward</span>
+                </button>
+                <button onclick="cargarLlm('Resumen', '@Model.Titulo')" class="btn btn-vintage flex-fill">
+                    RESUMEN IA
+                    <span class="material-symbols-outlined fs-6 align-middle ms-1">arrow_forward</span>
+                </button>
+                <button onclick="cargarLlm('Spoiler', '@Model.Titulo')" class="btn btn-vintage flex-fill">
+                    SPOILER ALERT
+                    <span class="material-symbols-outlined fs-6 align-middle ms-1">arrow_forward</span>
+                </button>
             </div>
-            <!-- Recent Reviews -->
+
+            <!-- Messagge exito o error -->
+            @if (TempData["ReviewExiste"] != null)
+            {
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    <strong>@TempData["ReviewExiste"]</strong>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            }
+
+            <!-- Review Title -->
             <div>
                 <h5 class="fw-bold fst-italic mb-4 d-flex align-items-center gap-2">
-                    <span class="material-symbols-outlined">forum</span> RECENT TELEGRAMS
+                    <span class="material-symbols-outlined">forum</span> REVIEWS
                 </h5>
-                <div class="p-4 bg-white inkwell-border d-flex gap-4">
-                    <div class="rounded-circle border border-dark border-2 d-flex align-items-center justify-content-center bg-cream flex-shrink-0" style="width: 60px; height: 60px;">
-                        <span class="material-symbols-outlined fs-2">person_play</span>
-                    </div>
-                    <div>
-                        <div class="d-flex justify-content-between mb-2">
-                            <h6 class="fw-bold mb-0">RubberHose_Fan</h6>
-                            <span class="small fst-italic opacity-50">Oct 12, 1932</span>
+            </div>
+            <!-- Recent Reviews -->
+            @foreach (var item in Model.ListaReviews)
+            {
+                <div class="mb-3">                    
+                    <div class="p-4 bg-white inkwell-border d-flex gap-4">
+                        <img alt="@item.Usuario.Nombre" class="rounded-circle me-3" height="40"
+                             src="@(string.IsNullOrEmpty(item.Usuario.ImagenUrlPerfil) ? "/images/default-avatar.png" : item.Usuario.ImagenUrlPerfil)"
+                             onerror="this.src='/images/default-avatar.png'" width="40" />
+                        <div>
+                            <div class="d-flex justify-content-between mb-0">
+                                <h6 class="fw-bold me-3">@string.Concat(item.Usuario.Nombre, " ", item.Usuario.Apellido)</h6>
+                                <span class="small fst-italic opacity-50">@item.FechaReview.ToShortDateString()</span>
+                            </div>
+                            <div class="mb-2">
+                                @for (int i = 1; i <= 5; i++)
+                                {
+                                    if (i <= item.Rating)
+                                    {
+                                        <span class="material-symbols-outlined star-filled">star</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="material-symbols-outlined star-empty">grade</span>
+                                    }
+                                }
+                            </div>
+                            <p class="mb-3">@item.Comentario</p>
+
+                            @if (SignInManager.IsSignedIn(User))
+                            {
+                                @if (UserManager.IsInRoleAsync(await UserManager.GetUserAsync(User), "Admin").Result)
+                                {
+                                    <div>
+                                        <a asp-controller="Review" asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-dark">
+                                            Editar
+                                        </a>
+                                    </div>
+                                }
+                            }
                         </div>
-                        <p class="mb-0">An absolute masterpiece of the medium. The way the shadows move is unlike anything I've seen in the talkies so far!</p>
                     </div>
                 </div>
-            </div>
+            }
         </div>
     </div>
 </div>
 
+@{
+    var review = new ReviewCreateViewModel
+    {
+        PeliculaId = Model.Id,
+        PeliculaTitulo = Model.Titulo
+    };
+}
+
+
+<partial name="~/Views/Review/_CreateReview.cshtml" model="review" />
+
+@* Modal LLM *@
+@{
+    var llmViewModel = new ModalLlmViewModel
+    {
+        Tipo = "",
+        Pelicula = Model.Titulo,
+        SpoilerResumen = ""
+    };
+}
+
+<partial name="~/Views/Home/_ModalLlm.cshtml" model="llmViewModel" />
+
+@section Scripts {
+    <script>
+        function cargarLlm(tipo, titulo) {
+            // Mostrar el modal
+            const modal = new bootstrap.Modal(document.getElementById('llmModal'));
+
+            // Actualizar el título del modal
+            document.getElementById('modalTipoTexto').textContent = tipo;
+            document.getElementById('modalPeliculaTexto').textContent = titulo;
+
+            // Mostrar spinner y ocultar contenido
+            document.getElementById('llmModalLoading').style.display = 'block';
+            document.getElementById('llmModalContent').style.display = 'none';
+
+            modal.show();
+
+            // Determinar la URL según el tipo
+            const url = tipo === 'Spoiler'
+                ? '@Url.Action("Spoiler", "Home")?titulo=' + encodeURIComponent(titulo)
+                : '@Url.Action("Resumen", "Home")?titulo=' + encodeURIComponent(titulo);
+
+            // Hacer la llamada AJAX
+            fetch(url)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        document.getElementById('llmModalContent').innerHTML = '<p>' + data.data + '</p>';
+                    } else {
+                        document.getElementById('llmModalContent').innerHTML =
+                            '<div class="alert alert-danger">Error: ' + data.message + '</div>';
+                    }
+                })
+                .catch(error => {
+                    document.getElementById('llmModalContent').innerHTML =
+                        '<div class="alert alert-danger">Error al cargar la información: ' + error.message + '</div>';
+                })
+                .finally(() => {
+                    // Ocultar spinner y mostrar contenido
+                    document.getElementById('llmModalLoading').style.display = 'none';
+                    document.getElementById('llmModalContent').style.display = 'block';
+                });
+        }
+    </script>
+}

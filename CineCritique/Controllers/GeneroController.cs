@@ -1,15 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using CineCritique.Data;
+using CineCritique.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using CineCritique.Data;
-using CineCritique.Models;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace CineCritique.Controllers
 {
+    [Authorize(Roles = "Admin")]
     public class GeneroController : Controller
     {
         private readonly MovieDbContext _context;

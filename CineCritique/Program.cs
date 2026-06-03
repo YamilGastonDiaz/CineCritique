@@ -47,6 +47,13 @@ builder.Services.ConfigureApplicationCookie(o =>
 builder.Services.AddScoped<ImagenStorage>();
 builder.Services.Configure<FormOptions>(o => { o.MultipartBodyLengthLimit = 2 * 1024 * 1024; });
 
+//Servicios de mail
+builder.Services.Configure<SmtpSettings>(builder.Configuration.GetSection("Smtp"));
+builder.Services.AddScoped<IEmailService, SmtpEmailService>();
+
+//Servicios LLM
+builder.Services.AddScoped<LlmService>();
+
 var app = builder.Build();
 
 using (var scope = app.Services.CreateScope())

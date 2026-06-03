@@ -1,0 +1,48 @@
+﻿@model List<Review>
+
+@{
+}
+
+<div class="container">
+    <div class="row justify-content-center">
+        <!-- Review Title -->
+        <div>
+            <h5 class="fw-bold fst-italic mb-4 gap-2">
+                <span class="material-symbols-outlined">forum</span> MIS REVIEWS
+            </h5>
+        </div>
+        <!-- Recent Reviews -->
+        @foreach (var item in Model)
+        {
+            <div class="col-8 mb-3">
+                <div class="p-4 bg-white inkwell-border d-flex gap-4">
+                    <img alt="@item.Pelicula.Titulo" class="rounded-circle me-3" height="40"
+                         src="@item.Pelicula.PosterUrlPortada"
+                         onerror="this.src='/images/default-avatar.png'" width="40" />
+                    <div>
+                        <div class="d-flex justify-content-between mb-2">
+                            <h6 class="fw-bold me-3">@item.Pelicula.Titulo</h6>
+                            <span class="small fst-italic opacity-50">@item.FechaReview.ToShortDateString()</span>
+                        </div>
+                        <div class="mb-2">
+                            @for (int i = 1; i <= 5; i++)
+                            {
+                                if (i <= item.Rating)
+                                {
+                                    <span class="material-symbols-outlined star-filled">star</span>
+                                }
+                                else
+                                {
+                                    <span class="material-symbols-outlined star-empty">grade</span>
+                                }
+                            }
+                        </div>
+                        <p class="mb-3">@item.Comentario</p>
+                        <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-dark">Edit</a>
+                    </div>
+                </div>
+            </div>
+        }
+
+    </div>
+</div>
