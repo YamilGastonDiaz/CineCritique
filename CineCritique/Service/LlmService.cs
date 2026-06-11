@@ -51,8 +51,7 @@ namespace CineCritique.Service
                     Endpoint = new Uri("https://api.groq.com/openai/v1")
                 };
 
-                // 2. Inicializamos directamente el ChatClient pasándole el modelo, la clave y las opciones.
-                // Esta es la sobrecarga más limpia y compatible del SDK para desvíos de Endpoint.
+                // 2. Inicializamos directamente el ChatClient pasándole el modelo, la clave y las opciones.                
                 System.ClientModel.ApiKeyCredential credential = new(_apiKey);
                 ChatClient client = new(model: _model, credential: credential, options: options);
 
